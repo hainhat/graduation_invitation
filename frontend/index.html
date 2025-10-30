@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thiệp Mời Tốt Nghiệp</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Flowbite -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/frontend/css/style.css">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+
+<!-- Hero Section -->
+<section class="container mx-auto px-4 py-16 text-center">
+    <div class="max-w-3xl mx-auto">
+        <!-- Avatar -->
+        <!--        <img src="/assets/images/avatar.jpg"-->
+        <!--             alt="Graduate"-->
+        <!--             class="w-32 h-32 rounded-full mx-auto mb-6 shadow-lg border-4 border-white">-->
+
+        <!-- Title -->
+        <h1 class="text-5xl font-bold text-gray-800 mb-4">
+            🎓 Lễ Tốt Nghiệp
+        </h1>
+
+        <p class="text-2xl text-gray-600 mb-2">
+            Tớ Hài Nhất
+        </p>
+
+        <p class="text-xl text-gray-500 mb-8">
+            Khoa Công Nghệ Thông Tin<br>
+            Trường Đại học Mở TP.Hồ Chí Minh
+        </p>
+
+        <!-- DateTime & Location Card -->
+        <div class="bg-white rounded-lg shadow-xl p-8 mb-8">
+            <div class="grid md:grid-cols-2 gap-6 text-left">
+                <!-- DateTime -->
+                <div class="flex items-start">
+                    <svg class="w-6 h-6 text-blue-600 mr-3 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                              clip-rule="evenodd"/>
+                    </svg>
+                    <div>
+                        <h3 class="font-semibold text-gray-800">Thời gian</h3>
+                        <p class="text-gray-600">13:00 - Thứ 7, 13/12/2025</p>
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div class="flex items-start">
+                    <svg class="w-6 h-6 text-blue-600 mr-3 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                              d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                              clip-rule="evenodd"/>
+                    </svg>
+                    <div>
+                        <h3 class="font-semibold text-gray-800">Địa điểm</h3>
+                        <p class="text-gray-600">Sảnh chờ, Trường Đại học Mở TP.Hồ Chí Minh</p>
+                        <a target="_blank" href="https://maps.app.goo.gl/SBpokiWCAatu3gF5A"
+                           class="text-blue-600 text-sm hover:underline">Xem bản đồ →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Countdown Timer -->
+        <div class="flex flex-wrap items-center justify-center w-full gap-2 sm:gap-3 md:gap-4 lg:gap-6 count-down-main">
+            <!-- Ngày -->
+            <div class="timer">
+                <div class="rounded-xl bg-gradient-to-b from-indigo-600 to-purple-600
+                py-2 sm:py-3 px-2 sm:px-3 min-w-[70px] sm:min-w-[90px]
+                flex items-center justify-center flex-col gap-1 aspect-square">
+                    <h3 class="countdown-element days font-manrope font-semibold
+                 text-lg sm:text-xl md:text-2xl text-white text-center">
+                    </h3>
+                    <p class="text-sm sm:text-base font-manrope font-normal text-white mt-1 text-center w-full">Ngày</p>
+                </div>
+            </div>
+
+            <h3 class="font-manrope font-semibold text-xl sm:text-2xl text-gray-900">:</h3>
+
+            <!-- Giờ -->
+            <div class="timer">
+                <div class="rounded-xl bg-gradient-to-b from-indigo-600 to-purple-600
+                py-2 sm:py-3 px-2 sm:px-3 min-w-[70px] sm:min-w-[90px]
+                flex items-center justify-center flex-col gap-1 aspect-square">
+                    <h3 class="countdown-element hours font-manrope font-semibold
+                 text-lg sm:text-xl md:text-2xl text-white text-center">
+                    </h3>
+                    <p class="text-sm sm:text-base font-manrope font-normal text-white mt-1 text-center w-full">Giờ</p>
+                </div>
+            </div>
+
+            <h3 class="font-manrope font-semibold text-xl sm:text-2xl text-gray-900">:</h3>
+
+            <!-- Phút -->
+            <div class="timer">
+                <div class="rounded-xl bg-gradient-to-b from-indigo-600 to-purple-600
+                py-2 sm:py-3 px-2 sm:px-3 min-w-[70px] sm:min-w-[90px]
+                flex items-center justify-center flex-col gap-1 aspect-square">
+                    <h3 class="countdown-element minutes font-manrope font-semibold
+                 text-lg sm:text-xl md:text-2xl text-white text-center">
+                    </h3>
+                    <p class="text-sm sm:text-base font-manrope font-normal text-white mt-1 text-center w-full">Phút</p>
+                </div>
+            </div>
+
+            <h3 class="font-manrope font-semibold text-xl sm:text-2xl text-gray-900">:</h3>
+
+            <!-- Giây -->
+            <div class="timer">
+                <div class="rounded-xl bg-gradient-to-b from-indigo-600 to-purple-600
+                py-2 sm:py-3 px-2 sm:px-3 min-w-[70px] sm:min-w-[90px]
+                flex items-center justify-center flex-col gap-1 aspect-square">
+                    <h3 class="countdown-element seconds font-manrope font-semibold
+                 text-lg sm:text-xl md:text-2xl text-white text-center">
+                    </h3>
+                    <p class="text-sm sm:text-base font-manrope font-normal text-white mt-1 text-center w-full">Giây</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- RSVP Form Section -->
+<section class="container mx-auto px-4 py-12">
+    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-xl p-8">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">
+            Xác Nhận Tham Dự
+        </h2>
+
+        <form id="rsvpForm" class="space-y-6">
+            <!-- Name -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Họ và tên <span class="text-red-500">*</span>
+                </label>
+                <input type="text"
+                       id="name"
+                       required
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                       placeholder="Nguyễn Văn B">
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Email
+                </label>
+                <input type="email"
+                       id="email"
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                       placeholder="email@example.com">
+            </div>
+
+            <!-- Phone -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Số điện thoại
+                </label>
+                <input type="tel"
+                       id="phone"
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                       placeholder="0912345678">
+            </div>
+
+            <!-- Status -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Tình trạng <span class="text-red-500">*</span>
+                </label>
+                <select id="status"
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="">-- Chọn --</option>
+                    <option value="yes">✅ Có, tôi sẽ tham dự</option>
+                    <option value="no">❌ Không thể tham dự</option>
+                    <option value="maybe">🤔 Chưa chắc chắn</option>
+                </select>
+            </div>
+
+            <!-- Guest Count -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Số người đi cùng
+                </label>
+                <input type="number"
+                       id="guest_count"
+                       min="1"
+                       max="10"
+                       value="1"
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+
+            <!-- Message -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Lời chúc
+                </label>
+                <textarea id="message"
+                          rows="4"
+                          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder="Gửi lời chúc đến người tốt nghiệp..."></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 shadow-lg hover:shadow-xl">
+                Gửi Xác Nhận
+            </button>
+        </form>
+
+        <!-- Success Message (hidden by default) -->
+        <div id="successMessage" class="hidden mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <p class="text-green-800 text-center">
+                ✅ Cảm ơn bạn đã xác nhận! Hẹn gặp lại tại lễ tốt nghiệp.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="container mx-auto px-4 py-12">
+    <div class="max-w-4xl mx-auto">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+            Thống Kê Xác Nhận
+        </h2>
+
+        <div class="grid md:grid-cols-3 gap-6" id="stats">
+            <!-- Will be populated by JS -->
+        </div>
+    </div>
+</section>
+
+<!-- Flowbite JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
+<script>
+    // count-down timer
+    let dest = new Date("dec 13, 2025 13:00:00").getTime();
+    let x = setInterval(function () {
+        let now = new Date().getTime();
+        let diff = dest - now;
+
+// Check if the countdown has reached zero or negative
+        if (diff <= 0) {
+            clearInterval(x); // Stop the countdown
+            return; // Exit the function
+        }
+
+        let days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        let hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        if (days < 10) {
+            days = `0${days}`;
+        }
+        if (hours < 10) {
+            hours = `0${hours}`;
+        }
+        if (minutes < 10) {
+            minutes = `0${minutes}`;
+        }
+        if (seconds < 10) {
+            seconds = `0${seconds}`;
+        }
+
+// Get elements by class name
+        let countdownElements = document.getElementsByClassName("countdown-element");
+
+// Loop through the elements and update their content
+        for (let i = 0; i < countdownElements.length; i++) {
+            let className = countdownElements[i].classList[1]; // Get the second class name
+            switch (className) {
+                case "days":
+                    countdownElements[i].innerHTML = days;
+                    break;
+                case "hours":
+                    countdownElements[i].innerHTML = hours;
+                    break;
+                case "minutes":
+                    countdownElements[i].innerHTML = minutes;
+                    break;
+                case "seconds":
+                    countdownElements[i].innerHTML = seconds;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }, 1000);
+</script>
+<!-- Custom JS -->
+<script src="/frontend/js/main.js"></script>
+</body>
+</html>

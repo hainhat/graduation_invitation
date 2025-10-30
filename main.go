@@ -1,30 +1,35 @@
 package main
 
 import (
+	"graduation_invitation/backend/config"
+	"graduation_invitation/backend/models"
+
 	"github.com/gin-gonic/gin"
-	//"graduation_invitation/config"
-	//"graduation_invitation/routes"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func main() {
-	// Connect DB
-	//config.ConnectDB()
+	config.ConnectDB()
 
-	// Setup router
 	r := gin.Default()
 
-	// Serve static files
-	r.Static("/assets", "./views/assets")
-	r.Static("/css", "./views/css")
-	r.Static("/js", "./views/js")
+	r.Static("/", "./frontend")
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte("admin123"), bcrypt.DefaultCost)
 
-	// Serve HTML pages
-	r.StaticFile("/", "./views/index.html")      // Thiệp mời
-	r.StaticFile("/admin", "./views/admin.html") // Admin
+	admin := models.User{
+		Email:    "admin@graduation.com",
+		Password: string(hashedPassword),
+		FullName: "Admin",
+		Role:     "admin",
+	}
+	config.DB.FirstOrCreate(&admin, models.User{Email: admin.Email})
+
+	println("✅ Setup complete!")
+	println("Admin email: admin@graduation.com")
+	println("Admin password: admin123")
 
 	// API routes
 	//routes.SetupRoutes(r)
 
-	// Run
 	r.Run(":8080")
 }
