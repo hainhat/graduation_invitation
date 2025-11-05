@@ -9,7 +9,7 @@ import (
 type User struct {
 	ID        uint           `json:"id" gorm:"primaryKey"`
 	Email     string         `json:"email" gorm:"uniqueIndex;not null"`
-	Password  string         `json:"-" gorm:"not null"` // Hide in JSON
+	Password  string         `json:"-" gorm:"not null"`
 	FullName  string         `json:"full_name" gorm:"not null"`
 	Phone     string         `json:"phone"`
 	Role      string         `json:"role" gorm:"type:varchar(20);default:'user';not null;check:role IN ('admin', 'user')"`

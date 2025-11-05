@@ -1,21 +1,14 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thiệp Mời Tốt Nghiệp</title>
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Flowbite -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/frontend/css/style.css">
+    {{head}}
+    <script src="/js/config.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/rsvp.js"></script>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-
+{{header}}
 <!-- Hero Section -->
 <section class="container mx-auto px-4 py-16 text-center">
     <div class="max-w-3xl mx-auto">
@@ -30,7 +23,7 @@
         </h1>
 
         <p class="text-2xl text-gray-600 mb-2">
-            Tớ Hài Nhất
+            Tô Hải Nhật
         </p>
 
         <p class="text-xl text-gray-500 mb-8">
@@ -39,11 +32,11 @@
         </p>
 
         <!-- DateTime & Location Card -->
-        <div class="bg-white rounded-lg shadow-xl p-8 mb-8">
-            <div class="grid md:grid-cols-2 gap-6 text-left">
-                <!-- DateTime -->
-                <div class="flex items-start">
-                    <svg class="w-6 h-6 text-blue-600 mr-3 mt-1" fill="currentColor" viewBox="0 0 20 20">
+        <div class="bg-white rounded-2xl shadow-xl p-8 mb-8 w-full max-w-screen-lg mx-auto">
+            <div class="grid md:grid-cols-2 gap-10 text-left">
+                <!-- Thời gian -->
+                <div class="flex items-start space-x-3">
+                    <svg class="w-6 h-6 text-indigo-600 mt-1 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd"
                               d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
                               clip-rule="evenodd"/>
@@ -54,18 +47,19 @@
                     </div>
                 </div>
 
-                <!-- Location -->
-                <div class="flex items-start">
-                    <svg class="w-6 h-6 text-blue-600 mr-3 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                <!-- Địa điểm -->
+                <div class="flex items-start space-x-3">
+                    <svg class="w-6 h-6 text-indigo-600 mt-1 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd"
                               d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
                               clip-rule="evenodd"/>
                     </svg>
                     <div>
                         <h3 class="font-semibold text-gray-800">Địa điểm</h3>
-                        <p class="text-gray-600">Sảnh chờ, Trường Đại học Mở TP.Hồ Chí Minh</p>
+                        <p class="text-gray-600 whitespace-nowrap">Sảnh chờ
+                            <br>Trường Đại học Mở TP.Hồ Chí Minh</p>
                         <a target="_blank" href="https://maps.app.goo.gl/SBpokiWCAatu3gF5A"
-                           class="text-blue-600 text-sm hover:underline">Xem bản đồ →</a>
+                           class="text-indigo-600 text-sm hover:underline">Xem đường đi →</a>
                     </div>
                 </div>
             </div>
@@ -136,85 +130,48 @@
         <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">
             Xác Nhận Tham Dự
         </h2>
+        <p id="rsvp_notice" class="text-sm text-green-600 hidden mb-4"></p>
 
         <form id="rsvpForm" class="space-y-6">
             <!-- Name -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Họ và tên <span class="text-red-500">*</span>
-                </label>
-                <input type="text"
-                       id="name"
-                       required
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                       placeholder="Nguyễn Văn B">
+                <label for="rsvp_name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                <input id="rsvp_name" name="full_name" type="text" required
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
             </div>
 
-            <!-- Email -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Email
-                </label>
-                <input type="email"
-                       id="email"
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                       placeholder="email@example.com">
+                <label for="rsvp_email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input id="rsvp_email" name="email" type="email" required
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
             </div>
 
-            <!-- Phone -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Số điện thoại
-                </label>
-                <input type="tel"
-                       id="phone"
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                       placeholder="0912345678">
+                <label for="rsvp_phone" class="block text-sm font-medium text-gray-700">Phone</label>
+                <input id="rsvp_phone" name="phone" type="tel"
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
             </div>
 
-            <!-- Status -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Tình trạng <span class="text-red-500">*</span>
-                </label>
-                <select id="status"
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <option value="">-- Chọn --</option>
-                    <option value="yes">✅ Có, tôi sẽ tham dự</option>
-                    <option value="no">❌ Không thể tham dự</option>
-                    <option value="maybe">🤔 Chưa chắc chắn</option>
+                <label for="attendance" class="block text-sm font-medium text-gray-700">Will you attend?</label>
+                <select id="attendance" name="attendance"
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                    <option value="yes">Yes, I will attend</option>
+                    <option value="no">Sorry, I can’t attend</option>
+                    <option value="maybe">Maybe</option>
                 </select>
             </div>
 
-            <!-- Guest Count -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Số người đi cùng
-                </label>
-                <input type="number"
-                       id="guest_count"
-                       min="1"
-                       max="10"
-                       value="1"
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+                <textarea id="message" name="message" rows="3"
+                          class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                          placeholder="Any message..."></textarea>
             </div>
 
-            <!-- Message -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Lời chúc
-                </label>
-                <textarea id="message"
-                          rows="4"
-                          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          placeholder="Gửi lời chúc đến người tốt nghiệp..."></textarea>
-            </div>
-
-            <!-- Submit Button -->
             <button type="submit"
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 shadow-lg hover:shadow-xl">
-                Gửi Xác Nhận
+                    class="w-full bg-indigo-600 text-white font-medium py-2 rounded-lg hover:bg-indigo-700">
+                Gửi
             </button>
         </form>
 
@@ -240,8 +197,7 @@
     </div>
 </section>
 
-<!-- Flowbite JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
+
 <script>
     // count-down timer
     let dest = new Date("dec 13, 2025 13:00:00").getTime();
@@ -298,7 +254,6 @@
         }
     }, 1000);
 </script>
-<!-- Custom JS -->
-<script src="/frontend/js/main.js"></script>
+{{footer}}
 </body>
 </html>
