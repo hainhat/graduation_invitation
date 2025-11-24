@@ -2,10 +2,12 @@ package main
 
 import (
 	"graduation_invitation/backend/config"
+	"graduation_invitation/backend/models"
 	"graduation_invitation/backend/routes"
 	"graduation_invitation/backend/utils"
 
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func main() {
@@ -34,19 +36,19 @@ func main() {
 		utils.RenderHTMLWithPartials(c, "./frontend/admin.html")
 	})
 
-	//hashedPassword, _ := bcrypt.GenerateFromPassword([]byte("admin123"), bcrypt.DefaultCost)
-	//
-	//admin := models.User{
-	//	Email:    "admin@graduation.com",
-	//	Password: string(hashedPassword),
-	//	FullName: "Admin",
-	//	Role:     "admin",
-	//}
-	//config.DB.FirstOrCreate(&admin, models.User{Email: admin.Email})
-	//
-	//println("✅ Setup complete!")
-	//println("Admin email: admin@graduation.com")
-	//println("Admin password: admin123")
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte("admin123"), bcrypt.DefaultCost)
+
+	admin := models.User{
+		Email:    "admin@graduation.com",
+		Password: string(hashedPassword),
+		FullName: "Admin",
+		Role:     "admin",
+	}
+	config.DB.FirstOrCreate(&admin, models.User{Email: admin.Email})
+
+	println("✅ Setup complete!")
+	println("Admin email: admin@graduation.com")
+	println("Admin password: admin123")
 
 	// API routes
 	routes.SetupRoutes(r)

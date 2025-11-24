@@ -34,6 +34,16 @@ func AuthJWT() gin.HandlerFunc {
 			return
 		}
 
+		// Kiểm tra token type (nếu có claim này)
+		// Access token mới sẽ có claim "token_type": "access"
+		// Token cũ (24h) sẽ không có claim này -> vẫn cho phép để tương thích ngược (hoặc chặn nếu muốn strict)
+		if tokenType, ok := claims["token_type"].(string); ok {
+			if tokenType != "access" {
+				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"success": false, "message": "Invalid token type. Access token required."})
+				return
+			}
+		}
+
 		// Lấy user ID từ claims
 		userIDFloat, ok := claims["id"].(float64)
 		if !ok {

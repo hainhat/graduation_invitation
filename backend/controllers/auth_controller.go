@@ -36,16 +36,38 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// Sinh token JWT
+	// Sinh token JWT (giữ nguyên để tương thích)
 	token, err := utils.GenerateJWT(user.ID, user.Role)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Failed to create token"})
 		return
 	}
 
+	// Sinh access token và refresh token mới
+	accessToken, err := utils.GenerateAccessToken(user.ID, user.Role)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Failed to create access token"})
+		return
+	}
+
+	refreshToken, err := utils.GenerateRefreshToken(user.ID, user.Role)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Failed to create refresh token"})
+		return
+	}
+
+	// Lưu refresh token vào database
+	user.RefreshToken = refreshToken
+	if err := config.DB.Save(&user).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Failed to save refresh token"})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"success": true,
-		"token":   token,
+		"success":       true,
+		"token":         token,        // Giữ nguyên để tương thích với code cũ
+		"access_token":  accessToken,  // Token mới với thời gian ngắn
+		"refresh_token": refreshToken, // Token để làm mới
 		"user": gin.H{
 			"id":        user.ID,
 			"email":     user.Email,
@@ -118,18 +140,32 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	// Sinh JWT token sau khi đăng ký
-	token, err := utils.GenerateJWT(user.ID, user.Role)
+	// Sinh access token và refresh token mới
+	accessToken, err := utils.GenerateAccessToken(user.ID, user.Role)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Không thể tạo token"})
+		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Failed to create access token"})
+		return
+	}
+
+	refreshToken, err := utils.GenerateRefreshToken(user.ID, user.Role)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Failed to create refresh token"})
+		return
+	}
+
+	// Lưu refresh token vào database
+	user.RefreshToken = refreshToken
+	if err := config.DB.Save(&user).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Failed to save refresh token"})
 		return
 	}
 
 	// Trả về user và token
 	c.JSON(http.StatusOK, gin.H{
-		"success": true,
-		"message": "Đăng ký thành công",
-		"token":   token,
+		"success":       true,
+		"message":       "Đăng ký thành công",
+		"access_token":  accessToken,
+		"refresh_token": refreshToken,
 		"user": gin.H{
 			"id":        user.ID,
 			"email":     user.Email,
@@ -153,4 +189,102 @@ func CheckEmail(c *gin.Context) {
 	} else {
 		c.JSON(200, gin.H{"exists": false})
 	}
+}
+
+// POST /api/refresh - Làm mới access token
+func RefreshToken(c *gin.Context) {
+	var req struct {
+		RefreshToken string `json:"refresh_token" binding:"required"`
+	}
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"message": "Refresh token is required",
+		})
+		return
+	}
+
+	// Validate refresh token
+	claims, err := utils.ValidateRefreshToken(req.RefreshToken)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"success": false,
+			"message": "Invalid or expired refresh token",
+		})
+		return
+	}
+
+	// Lấy user ID từ claims
+	userIDFloat, ok := claims["id"].(float64)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"success": false,
+			"message": "Invalid token claims",
+		})
+		return
+	}
+	userID := uint(userIDFloat)
+
+	// Kiểm tra refresh token có khớp với database không
+	var user models.User
+	if err := config.DB.First(&user, userID).Error; err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"success": false,
+			"message": "User not found",
+		})
+		return
+	}
+
+	// Kiểm tra refresh token có khớp với token đã lưu
+	if user.RefreshToken != req.RefreshToken {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"success": false,
+			"message": "Refresh token không hợp lệ hoặc đã bị thu hồi",
+		})
+		return
+	}
+
+	// Tạo access token mới
+	newAccessToken, err := utils.GenerateAccessToken(user.ID, user.Role)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"message": "Failed to generate access token",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success":      true,
+		"access_token": newAccessToken,
+	})
+}
+
+// POST /api/logout - Thu hồi refresh token
+func Logout(c *gin.Context) {
+	user, exists := c.Get("user")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"success": false,
+			"message": "Not logged in",
+		})
+		return
+	}
+
+	currentUser := user.(models.User)
+
+	// Xóa refresh token khỏi database
+	if err := config.DB.Model(&models.User{}).Where("id = ?", currentUser.ID).Update("refresh_token", "").Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"message": "Failed to logout",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "Đăng xuất thành công",
+	})
 }

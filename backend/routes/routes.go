@@ -16,7 +16,7 @@ func SetupRoutes(r *gin.Engine) {
 		api.GET("/check-email", controllers.CheckEmail)
 		api.POST("/rsvp", controllers.SubmitRSVP)
 		api.GET("/rsvp", controllers.GetAllRSVPs)
-
+		api.POST("/refresh", controllers.RefreshToken) // ← THÊM MỚI
 		// Protected routes (yêu cầu JWT)
 		auth := api.Group("/")
 		auth.Use(middleware.AuthJWT())

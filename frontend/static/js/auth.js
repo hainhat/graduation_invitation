@@ -1,5 +1,3 @@
-fetch(`${window.API_URL}/me`)
-
 // ========================
 // 🧩 Hàm dùng chung
 // ========================
@@ -16,9 +14,7 @@ function toggleVisibility(input, icon) {
 
 // 🔐 Lưu thông tin user sau khi đăng nhập / đăng ký
 function saveUserSession(data) {
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('user_name', data.user.full_name);
-    localStorage.setItem('user_role', data.user.role);
+    apiClient.setSession(data);
 }
 
 // ========================
@@ -46,11 +42,9 @@ function setupLoginPage() {
         }
 
         try {
-            const res = await fetch(`${API_URL}/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
+            const res = await apiClient.post('/login', { email, password });
+            if (!res) return; // Lỗi mạng hoặc gì đó
+
             const result = await res.json();
 
             if (result.success) {
@@ -86,7 +80,8 @@ function setupRegisterPage() {
     // ✅ Kiểm tra email trùng
     async function checkEmailExists(email) {
         try {
-            const res = await fetch(`${API_URL}/check-email?email=${encodeURIComponent(email)}`);
+            const res = await apiClient.get(`/check-email?email=${encodeURIComponent(email)}`);
+            if (!res) return false;
             const data = await res.json();
             return data.exists === true;
         } catch (err) {
@@ -135,11 +130,8 @@ function setupRegisterPage() {
         }
 
         try {
-            const res = await fetch(`${API_URL}/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ full_name, email, phone, password })
-            });
+            const res = await apiClient.post('/register', { full_name, email, phone, password });
+            if (!res) return;
 
             const data = await res.json();
 
