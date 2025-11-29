@@ -79,15 +79,29 @@ func Login(c *gin.Context) {
 
 // GET /api/me
 func Me(c *gin.Context) {
-	user, exists := c.Get("user")
+	userCtx, exists := c.Get("user")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{"success": false, "message": "Not logged in"})
 		return
 	}
 
+	user := userCtx.(models.User)
+
+	// Check if user has RSVP'd
+	var count int64
+	config.DB.Model(&models.RSVP{}).Where("user_id = ?", user.ID).Count(&count)
+
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"user":    user,
+		"user": gin.H{
+			"id":        user.ID,
+			"email":     user.Email,
+			"full_name": user.FullName,
+			"phone":     user.Phone,
+			"avatar":    user.Avatar,
+			"role":      user.Role,
+			"has_rsvp":  count > 0,
+		},
 	})
 }
 

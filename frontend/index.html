@@ -6,8 +6,186 @@
     <script src="/js/api_client.js"></script>
     <script src="/js/main.js"></script>
     <script src="/js/rsvp.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/vi.min.js"></script>
+    <style>
+        /* Custom styles for RSVP Messages Section */
+
+        /* Smooth scroll behavior */
+        #messagesContainer {
+            scroll-behavior: smooth;
+        }
+
+        /* Message hover effect */
+        #messagesContainer > div {
+            transition: all 0.2s ease;
+        }
+
+        #messagesContainer > div:hover {
+            transform: translateX(4px);
+        }
+
+        /* Avatar ring animation on hover */
+        #messagesContainer img:hover {
+            animation: avatarPulse 0.6s ease;
+        }
+
+        @keyframes avatarPulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Message bubble animation */
+        #messagesContainer .bg-gray-100 {
+            transition: all 0.2s ease;
+        }
+
+        #messagesContainer > div:hover .bg-gray-100 {
+            background-color: #e5e7eb;
+        }
+
+        /* Loading spinner */
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Smooth fade-in for new messages */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #messagesContainer > div {
+            animation: fadeInUp 0.4s ease;
+        }
+
+        /* Button hover effects */
+        #messagesContainer button {
+            position: relative;
+            overflow: hidden;
+        }
+
+        #messagesContainer button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: #4F46E5;
+            transition: width 0.3s ease;
+        }
+
+        #messagesContainer button:hover::after {
+            width: 100%;
+        }
+
+        /* Load more button effect */
+        #loadMoreBtn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        #loadMoreBtn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(79, 70, 229, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        #loadMoreBtn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            #messagesContainer {
+                font-size: 0.9rem;
+            }
+
+            #messagesContainer img {
+                width: 36px;
+                height: 36px;
+            }
+
+            #messagesContainer .bg-gray-100 {
+                padding: 0.5rem 0.75rem;
+            }
+        }
+
+        /* Empty state animation */
+        #emptyState > div:first-child {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Message count badge pulse */
+        #messageCount {
+            animation: badgePulse 2s ease infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Scrollbar styling for messages container */
+        #messagesContainer::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #messagesContainer::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        #messagesContainer::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        #messagesContainer::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+<body class="min-h-screen">
 {{header}}
 <!-- Hero Section -->
 <section class="container mx-auto px-4 py-16 text-center">
@@ -155,10 +333,12 @@
             <div>
                 <label for="attendance" class="block text-sm font-medium text-gray-700">Will you attend?</label>
                 <select id="attendance" name="attendance"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2">
-                    <option value="yes">Yes, I will attend</option>
-                    <option value="no">Sorry, I can’t attend</option>
-                    <option value="maybe">Maybe</option>
+                        class="w-full border rounded-lg px-3 py-2">
+                    <option value="yes">Có</option>
+                    <option id="option-no" value="no">
+                        Không/Khong/Khum/Khom/K/Kh/Khg/Ko/Kg/Hông/Hong/Hog/Hok/Hk/Hum/Hăm/Hem
+                    </option>
+                    <option value="maybe">Chưa chắc</option>
                 </select>
             </div>
 
@@ -183,6 +363,40 @@
         </div>
     </div>
 </section>
+<!-- RSVP Messages Section (giống Facebook Comments) -->
+<section class="container mx-auto px-4 py-12">
+    <div class="max-w-3xl mx-auto">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-6 pb-4 border-b">
+                <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                    💬 Lời nhắn từ mọi người
+                </h2>
+                <span id="messageCount" class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                    0 tin nhắn
+                </span>
+            </div>
+
+            <!-- Messages Container -->
+            <div id="messagesContainer" class="space-y-0 max-h-[600px] overflow-y-auto overflow-x-hidden">
+                <!-- Loading State -->
+                <div id="loadingMessages" class="text-center py-8">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                    <p class="text-gray-500 mt-2">Đang tải tin nhắn...</p>
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="hidden text-center py-12">
+                    <div class="text-6xl mb-4">💭</div>
+                    <p class="text-gray-500 text-lg">Chưa có lời nhắn nào</p>
+                    <p class="text-gray-400 text-sm mt-2">Hãy là người đầu tiên gửi lời chúc!</p>
+                </div>
+            </div>
+
+            <!-- Load More Button - REMOVED -->
+        </div>
+    </div>
+</section>
 
 <!-- Stats Section -->
 <section class="container mx-auto px-4 py-12">
@@ -199,6 +413,27 @@
 
 
 <script>
+    function updateOptionText() {
+        // Lấy thẻ option bằng ID đã đặt
+        const optionNo = document.getElementById('option-no');
+
+        if (!optionNo) return; // Kiểm tra nếu không tìm thấy thẻ thì dừng
+
+        // Kiểm tra chiều rộng màn hình (768px là kích thước tablet/mobile phổ biến)
+        if (window.innerWidth < 768) {
+            // Nếu là màn hình nhỏ -> Hiển thị chữ ngắn
+            optionNo.textContent = 'Hong';
+        } else {
+            // Nếu là màn hình lớn -> Hiển thị đầy đủ
+            optionNo.textContent = 'Không/Khong/Khum/Khom/K/Kh/Khg/Ko/Kg/Hông/Hong/Hog/Hok/Hk/Hum/Hăm/Hem';
+        }
+    }
+
+    // Chạy hàm 1 lần ngay khi tải trang
+    updateOptionText();
+
+    // Chạy lại hàm mỗi khi người dùng thay đổi kích thước cửa sổ
+    window.addEventListener('resize', updateOptionText);
     // count-down timer
     let dest = new Date("dec 13, 2025 13:00:00").getTime();
     let x = setInterval(function () {
@@ -253,6 +488,137 @@
             }
         }
     }, 1000);
+
+    // Set moment locale to Vietnamese
+    moment.locale('vi');
+
+    const API_BASE_URL = 'http://localhost:8080/api';
+
+    // Load RSVP messages - load all at once since we have scrollbar
+    async function loadRSVPMessages(page = 1) {
+        try {
+            // Load all messages (high limit since we're scrolling)
+            const response = await fetch(`${API_BASE_URL}/rsvp/messages?page=${page}&limit=100`);
+            const data = await response.json();
+
+            if (data.success) {
+                const messages = data.data || [];
+
+                // Hide loading on first page
+                if (page === 1) {
+                    document.getElementById('loadingMessages').classList.add('hidden');
+                }
+
+                // Show empty state if no messages
+                if (messages.length === 0 && page === 1) {
+                    document.getElementById('emptyState').classList.remove('hidden');
+                    return;
+                } else {
+                    document.getElementById('emptyState').classList.add('hidden');
+                }
+
+                // Update message count
+                const total = data.total || messages.length;
+                document.getElementById('messageCount').textContent = `${total} tin nhắn`;
+
+                // Render messages
+                const container = document.getElementById('messagesContainer');
+
+                // Clear container on first page
+                if (page === 1) {
+                    container.innerHTML = '';
+                }
+
+                messages.forEach(msg => {
+                    const messageElement = createRSVPMessageElement(msg);
+                    container.appendChild(messageElement);
+                });
+            }
+        } catch (error) {
+            console.error('Error loading messages:', error);
+            if (page === 1) {
+                document.getElementById('loadingMessages').innerHTML =
+                    '<p class="text-red-500">Không thể tải tin nhắn. Vui lòng thử lại sau.</p>';
+            }
+        }
+    }
+
+    // Create message element (Simple style)
+    function createRSVPMessageElement(msg) {
+        const div = document.createElement('div');
+        div.className = 'flex gap-2.5 py-3 border-b border-gray-100 last:border-0';
+
+        // Format time using moment.js
+        const timeAgo = moment(msg.created_at).fromNow();
+        const fullDate = moment(msg.created_at).format('dddd, DD/MM/YYYY [lúc] HH:mm');
+
+        // Generate avatar URL
+        const avatarUrl = msg.avatar || `https://res.cloudinary.com/dcncfkvwv/image/upload/v1733476463/sum8iqnxhdgdyj6zcc2l.jpg`;
+
+        div.innerHTML = `
+            <!-- Avatar -->
+            <div class="flex-shrink-0">
+                <img src="${avatarUrl}"
+                     alt="${escapeHtml(msg.name)}"
+                     class="w-10 h-10 rounded-full object-cover"
+                     onerror="this.src='https://res.cloudinary.com/dcncfkvwv/image/upload/v1733476463/sum8iqnxhdgdyj6zcc2l.jpg'">
+            </div>
+
+            <!-- Message Content -->
+            <div class="flex-1 min-w-0 overflow-hidden">
+                <!-- Name and Time -->
+                <div class="flex items-baseline justify-between mb-1 gap-2">
+                    <h3 class="font-semibold text-gray-900 text-sm truncate">
+                        ${escapeHtml(msg.name)}
+                    </h3>
+                    <span class="text-xs text-gray-400 flex-shrink-0" title="${fullDate}">
+                        ${timeAgo}
+                    </span>
+                </div>
+
+                <!-- Message Text -->
+                <p class="text-gray-700 text-sm break-words leading-relaxed overflow-wrap-anywhere">
+                    ${escapeHtml(msg.message)}
+                </p>
+            </div>
+        `;
+
+        return div;
+    }
+
+    // Escape HTML to prevent XSS
+    function escapeHtml(text) {
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    // Reload messages after form submission
+    const originalRSVPFormSubmit = document.getElementById('rsvpForm').onsubmit;
+    document.getElementById('rsvpForm').addEventListener('submit', async function(e) {
+        // Let the original handler run first
+        if (originalRSVPFormSubmit) {
+            await originalRSVPFormSubmit.call(this, e);
+        }
+
+        // After successful submission, reload messages
+        setTimeout(() => {
+            loadRSVPMessages(1);
+        }, 1000);
+    });
+
+    // Auto-refresh messages every 30 seconds
+    setInterval(() => {
+        loadRSVPMessages(1);
+    }, 30000);
+
+    // Initial load
+    loadRSVPMessages(1);
 </script>
 {{footer}}
 </body>

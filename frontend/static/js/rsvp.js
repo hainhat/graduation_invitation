@@ -25,6 +25,24 @@ document.addEventListener("DOMContentLoaded", async () => {
                 if (data.success && data.user) {
                     const user = data.user;
 
+                    // ✅ Nếu đã RSVP rồi thì ẩn form luôn
+                    if (user.has_rsvp) {
+                        if (form) form.classList.add('hidden');
+                        if (notice) notice.classList.add('hidden');
+                        
+                        const successMsg = document.getElementById('successMessage');
+                        if (successMsg) {
+                            successMsg.classList.remove('hidden');
+                            successMsg.innerHTML = `
+                                <p class="text-green-800 text-center">
+                                    ✅ Chào <strong>${user.full_name}</strong>, bạn đã xác nhận tham dự rồi!<br>
+                                    Hẹn gặp lại bạn tại lễ tốt nghiệp.
+                                </p>
+                            `;
+                        }
+                        return; // Dừng, không điền form nữa
+                    }
+
                     // Điền thông tin user vào form
                     if (nameInput) nameInput.value = user.full_name || '';
                     if (emailInput) emailInput.value = user.email || '';
@@ -78,13 +96,33 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (data.success) {
                 alert('🎉 ' + data.message);
-                form.reset();
-
-                // Nếu user đăng nhập thì điền lại auto sau reset
+                // Nếu user đăng nhập thì ẩn form và hiện thông báo cảm ơn
                 if (apiClient.getAccessToken()) {
-                    nameInput.value = localStorage.getItem('user_name') || '';
-                    emailInput.readOnly = true;
-                    phoneInput.readOnly = true;
+                    form.classList.add('hidden');
+                    if (notice) notice.classList.add('hidden');
+                    
+                    // Hiện message cảm ơn nếu chưa có
+                    let successMsg = document.getElementById('successMessage');
+                    if (successMsg) {
+                        successMsg.classList.remove('hidden');
+                        successMsg.scrollIntoView({ behavior: 'smooth' });
+                    }
+                } else {
+                    // Nếu là guest thì reset form để nhập tiếp nếu muốn
+                    form.reset();
+                }
+
+
+
+                // Reload messages if function exists
+                if (typeof window.reloadRSVPMessages === 'function') {
+                    // Small delay to ensure backend has processed the new message
+                    setTimeout(window.reloadRSVPMessages, 500);
+                }
+
+                // Reload stats if function exists
+                if (typeof window.loadRSVPStats === 'function') {
+                    setTimeout(window.loadRSVPStats, 500);
                 }
             } else {
                 alert('❌ ' + (data.message || 'Không thể gửi RSVP.'));

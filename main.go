@@ -2,15 +2,20 @@ package main
 
 import (
 	"graduation_invitation/backend/config"
-	"graduation_invitation/backend/models"
 	"graduation_invitation/backend/routes"
 	"graduation_invitation/backend/utils"
+	"log"
 
 	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	// Load environment variables
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found, using system environment variables")
+	}
+
 	config.ConnectDB()
 
 	r := gin.Default()
@@ -35,20 +40,6 @@ func main() {
 	r.GET("/admin", func(c *gin.Context) {
 		utils.RenderHTMLWithPartials(c, "./frontend/admin.html")
 	})
-
-	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte("admin123"), bcrypt.DefaultCost)
-
-	admin := models.User{
-		Email:    "admin@graduation.com",
-		Password: string(hashedPassword),
-		FullName: "Admin",
-		Role:     "admin",
-	}
-	config.DB.FirstOrCreate(&admin, models.User{Email: admin.Email})
-
-	println("✅ Setup complete!")
-	println("Admin email: admin@graduation.com")
-	println("Admin password: admin123")
 
 	// API routes
 	routes.SetupRoutes(r)
