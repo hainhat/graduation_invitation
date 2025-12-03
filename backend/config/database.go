@@ -13,7 +13,7 @@ import (
 var DB *gorm.DB
 
 func ConnectDB() {
-	dsn := "psql 'postgresql://neondb_owner:npg_ydJkj6RzMFq2@ep-nameless-violet-adh3afp1-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require'"
+	dsn := "host=dpg-d4nupier433s73eeqou0-a user=gra_inv_user password=bhrUNR5HobTAZq4kDTD81GEuy3Wp9tZi dbname=gra_inv port=5432 sslmode=disable"
 
 	var err error
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
