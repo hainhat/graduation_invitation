@@ -13,7 +13,7 @@ import (
 var DB *gorm.DB
 
 func ConnectDB() {
-	dsn := "host=localhost user=postgres password=hainhat2003 dbname=graduation_invitation port=5432 sslmode=disable TimeZone=Asia/Ho_Chi_Minh"
+	dsn := "psql 'postgresql://neondb_owner:npg_ydJkj6RzMFq2@ep-nameless-violet-adh3afp1-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require'"
 
 	var err error
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
