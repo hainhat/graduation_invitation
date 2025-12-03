@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -69,9 +70,21 @@ func SubmitRSVP(c *gin.Context) {
 		return
 	}
 
+	// ✅ Gửi email xác nhận (bất đồng bộ)
+	if req.GuestEmail != "" {
+		go func() {
+			err := utils.SendRSVPConfirmation(req.GuestEmail, req.GuestName)
+			if err != nil {
+				log.Printf("❌ Failed to send email to %s: %v", req.GuestEmail, err)
+			} else {
+				log.Printf("✅ Email sent successfully to %s", req.GuestEmail)
+			}
+		}()
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"message": "Cảm ơn bạn đã phản hồi!",
+		//"message": "Cảm ơn bạn đã phản hồi!",
 	})
 }
 

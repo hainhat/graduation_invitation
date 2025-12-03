@@ -30,6 +30,7 @@ func ConnectDB() {
 	err = DB.AutoMigrate(
 		&models.User{},
 		&models.RSVP{},
+		&models.Setting{},
 	)
 
 	if err != nil {

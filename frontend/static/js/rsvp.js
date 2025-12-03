@@ -31,14 +31,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                         if (notice) notice.classList.add('hidden');
                         
                         const successMsg = document.getElementById('successMessage');
+                        
                         if (successMsg) {
                             successMsg.classList.remove('hidden');
-                            successMsg.innerHTML = `
-                                <p class="text-green-800 text-center">
-                                    ✅ Chào <strong>${user.full_name}</strong>, bạn đã xác nhận tham dự rồi!<br>
-                                    Hẹn gặp lại bạn tại lễ tốt nghiệp.
-                                </p>
-                            `;
+                            
+                            // Trigger the tree animation
+                            if (typeof window.startTreeAnimation === 'function') {
+                                window.startTreeAnimation();
+                            }
                         }
                         return; // Dừng, không điền form nữa
                     }
@@ -46,21 +46,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                     // Điền thông tin user vào form
                     if (nameInput) nameInput.value = user.full_name || '';
                     if (emailInput) emailInput.value = user.email || '';
-                    if (phoneInput) phoneInput.value = user.phone || '';
 
                     // Ẩn chỉnh sửa để tránh sửa nhầm
-                    [nameInput, emailInput, phoneInput].forEach((input) => {
+                    [nameInput, emailInput].forEach((input) => {
                         if (input) {
                             input.readOnly = true;
                             input.classList.add('bg-gray-100', 'cursor-not-allowed');
                         }
                     });
-
-                    // Hiển thị thông báo user hiện tại
-                    if (notice) {
-                        notice.classList.remove('hidden');
-                        notice.textContent = `Bạn đang đăng nhập với tài khoản ${user.full_name} (${user.email})`;
-                    }
                 }
             }
         } catch (err) {
@@ -83,10 +76,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
 
         // Kiểm tra dữ liệu cơ bản
-        if (!rsvpData.guest_name || !rsvpData.guest_email) {
-            alert('⚠️ Vui lòng nhập đầy đủ họ tên và email!');
-            return;
-        }
+        // if (!rsvpData.guest_name || !rsvpData.guest_email) {
+        //     alert('⚠️ Vui lòng nhập đầy đủ họ tên và email!');
+        //     return;
+        // }
 
         try {
             const res = await apiClient.post('/rsvp', rsvpData);
@@ -95,7 +88,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             const data = await res.json();
 
             if (data.success) {
-                alert('🎉 ' + data.message);
                 // Nếu user đăng nhập thì ẩn form và hiện thông báo cảm ơn
                 if (apiClient.getAccessToken()) {
                     form.classList.add('hidden');
@@ -106,6 +98,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                     if (successMsg) {
                         successMsg.classList.remove('hidden');
                         successMsg.scrollIntoView({ behavior: 'smooth' });
+                        
+                        // Trigger the tree animation
+                        if (typeof window.startTreeAnimation === 'function') {
+                            window.startTreeAnimation();
+                        }
                     }
                 } else {
                     // Nếu là guest thì reset form để nhập tiếp nếu muốn

@@ -1,7 +1,3 @@
-// ========================
-// 🧩 Hàm dùng chung
-// ========================
-
 // 👁️ Hiển thị / ẩn mật khẩu
 function toggleVisibility(input, icon) {
     if (!input || !icon) return;

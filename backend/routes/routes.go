@@ -50,6 +50,13 @@ func SetupRoutes(r *gin.Engine) {
 			admin.GET("/rsvps/:id", controllers.AdminGetRSVP)
 			admin.PUT("/rsvps/:id", controllers.AdminUpdateRSVP)
 			admin.DELETE("/rsvps/:id", controllers.AdminDeleteRSVP)
+
+			// Public route - lấy setting
+			api.GET("/settings/:key", controllers.GetSettingByKey)
+
+			// Admin routes - quản lý settings
+			admin.GET("/settings", controllers.AdminGetSettings)
+			admin.PUT("/settings/:key", controllers.AdminUpdateSetting)
 		}
 	}
 }
